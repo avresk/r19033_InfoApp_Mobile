@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_order_list"
+        android:icon="@drawable/icon_new_order_24"
+        android:title="@string/title_orders" />
+
+    <item
+        android:id="@+id/navigation_new_order"
+        android:icon="@drawable/icon_orders"
+        android:title="@string/title_sort_orders" />
+
+
+</menu>
