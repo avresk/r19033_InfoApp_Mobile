@@ -236,6 +236,38 @@ public class MSSQL {
 
   }
 
+  public boolean upit_zavrsiNarudzbu(Long id) {
+    try {
+      getConnection();
 
+      if (conn != null) {
+        if (!conn.isClosed()) {
+          conn.setAutoCommit(false);
+          stmt = conn.createStatement();
+        }
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    String query = "UPDATE dbo.narudzba SET dbo.narudzba.zavrsena=1 WHERE dbo.narudzba.narudzba_id=" + id + ";";
+
+    try {
+      if (!conn.isClosed() && conn != null) {
+
+        stmt.executeUpdate(query);
+        stmt.close();
+        conn.commit();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return false;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
 
 }

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/black"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@android:color/black"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_ID"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_korisnikIme"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_korisnikPrezime"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_lokacija"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_nacinPlacanja"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_datumKreiranja"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_napomena"
+                android:inputType="textMultiLine"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:id="@+id/tvOD_ukupno"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnOD_zavrsi"
+                android:text="Zavrsi narudzbu"
+                android:layout_margin="10dp"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
