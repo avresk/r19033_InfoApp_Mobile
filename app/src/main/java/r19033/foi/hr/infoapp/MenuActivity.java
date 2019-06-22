@@ -14,18 +14,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import r19033.foi.hr.infoapp.adapters.NarudzbaAdapter;
 import r19033.foi.hr.infoapp.callbacks.ListUpdateCallback;
-import r19033.foi.hr.infoapp.callbacks.SearchByID;
 import r19033.foi.hr.infoapp.models.Narudzba;
+import r19033.foi.hr.infoapp.utils.Constants;
 import r19033.foi.hr.infoapp.utils.LoadProgress;
 import r19033.foi.hr.infoapp.utils.MSSQL;
 
@@ -35,25 +36,46 @@ public class MenuActivity extends AppCompatActivity {
 
   private LinearLayout llOrderList;
   private LinearLayout llSortedOrder;
+  private LinearLayout llListOrders;
+  private LinearLayout llListUnfinishedOrders;
+
   private ListView mOrderListView;
+  private ListView mUnfinishedOrdersListView;
   private ListView mSortedOrdersListView;
+
   private Button btnSearch;
   private Button btnClear;
 
+  private CheckBox cbUnfinishedOrders;
+  private CheckBox cbSortedUnfinishedOrders;
+
   private ListUpdateCallback callback;
-  private SearchByID callbackByID;
 
   private Spinner spSortBy;
   private Spinner spSortResult;
 
   private ArrayList<Narudzba> mOrderList = new ArrayList<>();
+  private ArrayList<Narudzba> mUnfinishedOrderList = new ArrayList<>();
   private ArrayList<Narudzba> mSortedOrdersList = new ArrayList<>();
+
+  private NarudzbaAdapter adbUnfinishedNarudzba;
   private NarudzbaAdapter adbNarudzba;
   private NarudzbaAdapter adbOrderedNarudzba;
 
-  private final String[] string_sortBy = {"Ime korisnika", "Lokacija"};
-  private final String[] string_dummy = {"test test", "Ivo Ivic"};
+  private int searchType = Constants.TRAZI_PO_KRILU;
+  private String searchValue = "JUG";
+
+  private final String[] string_sortBy = {"Lokacija: kat", "Lokacija: krilo"};
+  private final String[] string_kat = {"KAT 1", "KAT 2", "KAT 3"};
+  private final String[] string_krilo = {"JUG", "ISTOK"};
   private LoadProgress progress;
+
+  private boolean showOnlyUnfinishedSearchOrders = false;
+
+  ArrayAdapter<String> spinnerAdapterResultKat;
+  ArrayAdapter<String> spinnerAdapterSort;
+  ArrayAdapter<String> spinnerAdapterResultKrilo;
+
 
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
           = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -82,7 +104,7 @@ public class MenuActivity extends AppCompatActivity {
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     initialize();
-    new GetDataAsync().execute(callback);
+    new GetAllOrders().execute(callback);
     progress.showDialog();
   }
 
@@ -92,7 +114,7 @@ public class MenuActivity extends AppCompatActivity {
     if (requestCode == REQUEST_CODE) {
       if (resultCode == 123) {
         progress.showDialog();
-        new GetDataAsync().execute(callback);
+        new GetAllOrders().execute(callback);
       }
     }
   }
@@ -102,35 +124,98 @@ public class MenuActivity extends AppCompatActivity {
     llSortedOrder = findViewById(R.id.llNewOrder);
     llOrderList = findViewById(R.id.llViewOrders);
 
+    llListOrders = findViewById(R.id.listOrders);
+    llListUnfinishedOrders = findViewById(R.id.listUnfinishedOrders);
+
+    llListOrders.setVisibility(View.VISIBLE);
+    llListUnfinishedOrders.setVisibility(View.GONE);
+
     mOrderListView = findViewById(R.id.lvOrders);
+    mUnfinishedOrdersListView = findViewById(R.id.lvUnfinishedOrders);
+
     mSortedOrdersListView = findViewById(R.id.lvSortedOrders);
 
+    cbUnfinishedOrders = findViewById(R.id.cbUnfinishedOrders);
+    cbUnfinishedOrders.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        showOrderByStatus(b);
+      }
+    });
+
+    cbSortedUnfinishedOrders = findViewById(R.id.cbSortedUnfinishedOrders);
+    cbSortedUnfinishedOrders.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        showOnlyUnfinishedSearchOrders = b;
+        applyLocalSearch();
+      }
+    });
+
+    // adapteri
     adbNarudzba = new NarudzbaAdapter(this, mOrderList);
     adbOrderedNarudzba = new NarudzbaAdapter(this, mSortedOrdersList);
+    adbUnfinishedNarudzba = new NarudzbaAdapter(this, mUnfinishedOrderList);
 
+    // ListView's
     mOrderListView.setAdapter(adbNarudzba);
+    mUnfinishedOrdersListView.setAdapter(adbUnfinishedNarudzba);
     mSortedOrdersListView.setAdapter(adbOrderedNarudzba);
 
+    // spinner
     spSortBy = findViewById(R.id.spinnerSortBy);
     spSortResult = findViewById(R.id.spinnerSortResult);
 
-    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>
-            (this, android.R.layout.simple_spinner_item, string_sortBy); //selected item will look like a spinner set from XML
-    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    spSortBy.setAdapter(spinnerArrayAdapter);
+    spinnerAdapterResultKat = new ArrayAdapter<String>
+            (this, R.layout.custom_spinner_item, string_kat);
 
-    ArrayAdapter<String> spinnerArrayAdapterResult = new ArrayAdapter<String>
-            (this, android.R.layout.simple_spinner_item, string_dummy); //selected item will look like a spinner set from XML
-    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    spSortResult.setAdapter(spinnerArrayAdapterResult);
+    spinnerAdapterSort = new ArrayAdapter<String>
+            (this, R.layout.custom_spinner_item, string_sortBy);
+
+    spinnerAdapterResultKrilo = new ArrayAdapter<String>
+            (this, R.layout.custom_spinner_item, string_krilo);
+
+    spinnerAdapterSort.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    spSortBy.setAdapter(spinnerAdapterSort);
+
+    spinnerAdapterResultKat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    spSortResult.setAdapter(spinnerAdapterResultKat);
+
+    spinnerAdapterResultKat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+    spSortBy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String selectedItem = spSortBy.getSelectedItem().toString();
+        setSpinnerBySelectedItem(selectedItem);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> adapterView) {
+
+      }
+    });
+
+    spSortResult.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String selectedItem = spSortResult.getSelectedItem().toString();
+        setSearchType(selectedItem);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> adapterView) {
+
+      }
+    });
 
 
     btnSearch = findViewById(R.id.btnSortSearch);
     btnSearch.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        progress.showDialog();
-        new GetDataAsyncByID().execute(callbackByID);
+        applyLocalSearch();
       }
     });
 
@@ -143,6 +228,38 @@ public class MenuActivity extends AppCompatActivity {
       }
     });
 
+
+    mOrderListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Narudzba narudzba = mOrderList.get(position);
+        startDetailsActivity(narudzba);
+      }
+    });
+
+    mUnfinishedOrdersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        Narudzba narudzba = mUnfinishedOrderList.get(position);
+        startDetailsActivity(narudzba);
+      }
+    });
+
+    mSortedOrdersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        Narudzba narudzba = mSortedOrdersList.get(position);
+        startDetailsActivity(narudzba);
+
+      }
+    });
+
+    listUpdateCallback();
+  }
+
+  private void listUpdateCallback() {
     callback = new ListUpdateCallback() {
       @Override
       public void onUpdate(ArrayList<Narudzba> result) {
@@ -153,6 +270,7 @@ public class MenuActivity extends AppCompatActivity {
           mOrderList.addAll(result);
           if (!mOrderList.isEmpty()) {
             adbNarudzba.notifyDataSetChanged();
+            applyLocalSearch();
           } else {
             Toast.makeText(MenuActivity.this, "Lista narudzbi je prazna!", Toast.LENGTH_SHORT).show();
           }
@@ -162,26 +280,117 @@ public class MenuActivity extends AppCompatActivity {
 
       }
     };
+  }
 
-    callbackByID = new SearchByID() {
-      @Override
-      public void onUpdate(ArrayList<Narudzba> result) {
-        progress.dissmissDialog();
-        mSortedOrdersList.clear();
-        if (result != null) {
-          mSortedOrdersList.addAll(result);
-          if (!mSortedOrdersList.isEmpty()) {
-            adbOrderedNarudzba.notifyDataSetChanged();
-          } else {
-            Toast.makeText(MenuActivity.this, "Lista narudzbi je prazna!", Toast.LENGTH_SHORT).show();
-          }
-        } else {
-          Toast.makeText(MenuActivity.this, "Lista narudzbi je prazna!", Toast.LENGTH_SHORT).show();
+  private void setSpinnerBySelectedItem(String selectedItem) {
+    if (selectedItem.contains("kat")) {
+      spSortResult.setAdapter(spinnerAdapterResultKat);
+      searchType = Constants.TRAZI_PO_KATU;
+    } else if (selectedItem.contains("krilo")) {
+      spSortResult.setAdapter(spinnerAdapterResultKrilo);
+      searchType = Constants.TRAZI_PO_KRILU;
+    }
+  }
+
+
+  private void showOrderByStatus(boolean status) {
+    if (status) {
+      llListOrders.setVisibility(View.GONE);
+      llListUnfinishedOrders.setVisibility(View.VISIBLE);
+      mUnfinishedOrderList.clear();
+      for (Narudzba item : mOrderList) {
+        if (!item.isIzvrsena()) {
+          mUnfinishedOrderList.add(item);
         }
       }
-    };
+      adbUnfinishedNarudzba.notifyDataSetChanged();
 
-    //order list view
+    } else {
+      llListOrders.setVisibility(View.VISIBLE);
+      llListUnfinishedOrders.setVisibility(View.GONE);
+      adbNarudzba.notifyDataSetChanged();
+
+    }
+  }
+
+
+  private void setSearchType(String selectedItem) {
+    if (searchType == Constants.TRAZI_PO_KRILU) {
+      searchValue = selectedItem;
+    } else if (searchType == Constants.TRAZI_PO_KATU) {
+      if (selectedItem.contains("1")) {
+        searchValue = "1";
+      } else if (selectedItem.contains("2")) {
+        searchValue = "2";
+      } else if (selectedItem.contains("3")) {
+        searchValue = "3";
+      }
+    }
+  }
+
+  private void applyLocalSearch() {
+
+    mSortedOrdersList.clear();
+    adbOrderedNarudzba.notifyDataSetChanged();
+    for (Narudzba item : mOrderList) {
+      if (searchType == Constants.TRAZI_PO_KATU) {
+
+        if (item.getKat() != null) {
+          if (item.getKat().equals(searchValue)) {
+            if (showOnlyUnfinishedSearchOrders) {
+              if (!item.isIzvrsena()) {
+                mSortedOrdersList.add(item);
+              }
+            } else {
+              mSortedOrdersList.add(item);
+            }
+
+          }
+        }
+      }
+      else if (searchType == Constants.TRAZI_PO_KRILU) {
+
+        if (item.getKrilo() != null) {
+          if (item.getKrilo().equals(searchValue)) {
+            if (showOnlyUnfinishedSearchOrders) {
+              if (!item.isIzvrsena()) {
+                mSortedOrdersList.add(item);
+              }
+            } else {
+              Log.d("LocalSearch", "Finished order" + "; " + String.valueOf(item.getId()));
+              mSortedOrdersList.add(item);
+            }
+          }
+        }
+      }
+    }
+    if (mSortedOrdersList.size() > 0) {
+      adbOrderedNarudzba.notifyDataSetChanged();
+    } else {
+      Toast.makeText(MenuActivity.this, "Lista je prazna!", Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  private void startDetailsActivity(Narudzba narudzba) {
+
+    Intent orderDetails = new Intent(MenuActivity.this, OrderDetailsActivity.class);
+    orderDetails.putExtra("idNarudzbe", narudzba.getId().toString());
+    orderDetails.putExtra("korisnikIme", narudzba.getKorisnikIme());
+    orderDetails.putExtra("korisnikPrezime", narudzba.getKorisnikPrezime());
+    orderDetails.putExtra("lokacija", narudzba.getLokacija());
+    orderDetails.putExtra("kat", narudzba.getKat());
+    orderDetails.putExtra("krilo", narudzba.getKrilo());
+    orderDetails.putExtra("ukupno", String.valueOf(narudzba.getUkupno()));
+    orderDetails.putExtra("nacinPlacanja", narudzba.getNacin_placanja());
+    orderDetails.putExtra("napomena", narudzba.getNapomena());
+    orderDetails.putExtra("datumKreiranja", narudzba.getDatum_kreiranja());
+    if (narudzba.isIzvrsena()) {
+      orderDetails.putExtra("izvrsena", "Narudžba je izvršena!");
+    } else {
+      orderDetails.putExtra("izvrsena", "Narudžba nije izvršena!");
+    }
+
+    startActivityForResult(orderDetails, REQUEST_CODE);
   }
 
   private void showLayoutOrderList() {
@@ -192,7 +401,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     progress.showDialog();
-    new GetDataAsync().execute(callback);
+    new GetAllOrders().execute(callback);
   }
 
   private void showLayoutSortedOrders() {
@@ -205,14 +414,13 @@ public class MenuActivity extends AppCompatActivity {
   }
 
   @SuppressLint("StaticFieldLeak")
-  class GetDataAsync extends AsyncTask<ListUpdateCallback, Void, ArrayList<Narudzba>> {
+  class GetAllOrders extends AsyncTask<ListUpdateCallback, Void, ArrayList<Narudzba>> {
 
     ListUpdateCallback callback;
 
     @Override
     protected ArrayList<Narudzba> doInBackground(ListUpdateCallback... listUpdateCallbacks) {
       callback = listUpdateCallbacks[0];
-      // napraviti return prema commandi
       return MSSQL.getInstance().upit_pregledSvihNarudzbi();
     }
 
@@ -222,21 +430,4 @@ public class MenuActivity extends AppCompatActivity {
     }
   }
 
-  @SuppressLint("StaticFieldLeak")
-  class GetDataAsyncByID extends AsyncTask<SearchByID, Void, ArrayList<Narudzba>> {
-
-    SearchByID callback;
-
-    @Override
-    protected ArrayList<Narudzba> doInBackground(SearchByID... listUpdateCallbacks) {
-      callback = listUpdateCallbacks[0];
-      // napraviti return prema commandi
-      return MSSQL.getInstance().upit_narudbaByID(1L);
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<Narudzba> narudzbas) {
-      callback.onUpdate(narudzbas);
-    }
-  }
 }

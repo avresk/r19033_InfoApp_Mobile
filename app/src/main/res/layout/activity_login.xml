@@ -46,6 +46,17 @@
                 android:inputType="textPassword"
                 />
 
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Zapamti me"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:id="@+id/cbRememberMe"
+
+                />
+
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

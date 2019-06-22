@@ -14,15 +14,50 @@
         android:orientation="vertical"
         android:id="@+id/llViewOrders"
         android:layout_margin="10dp"
+        android:visibility="visible"
         >
 
-        <ListView
+        <CheckBox
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/lvOrders"
+            android:layout_height="wrap_content"
+            android:text="Prikaži samo neizvrsene narudžbe"
+            android:id="@+id/cbUnfinishedOrders"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/listOrders"
+            >
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/lvOrders"
+                android:layout_marginBottom="50dp"
+                >
+
+            </ListView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/listUnfinishedOrders"
             >
 
-        </ListView>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/lvUnfinishedOrders"
+                android:layout_marginBottom="50dp"
+                >
+
+            </ListView>
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -32,9 +67,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/llNewOrder"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
         android:visibility="gone"
+        android:layout_marginBottom="50dp"
         >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prikazi samo neizvrsene narudžbe"
+            android:id="@+id/cbSortedUnfinishedOrders"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -49,42 +94,54 @@
                 />
 
             <Spinner
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinnerSortBy"
+                android:textAlignment="center"
+
                 >
 
             </Spinner>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerSortResult"
+                android:textAlignment="center"
+                >
+            </Spinner>
         </LinearLayout>
 
-        <Spinner
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerSortResult"
-            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             >
 
-        </Spinner>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnSortClear"
+                android:text="Clear"
+                />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSortSearch"
-            android:text="Search"
-            />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnSortSearch"
+                android:text="Search"
+                />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSortClear"
-            android:text="Clear"
-            />
+
+        </LinearLayout>
 
         <ListView
             android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/lvSortedOrders"
+
             >
 
         </ListView>
@@ -100,6 +157,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/navigation"
+        />
 
 </android.support.constraint.ConstraintLayout>

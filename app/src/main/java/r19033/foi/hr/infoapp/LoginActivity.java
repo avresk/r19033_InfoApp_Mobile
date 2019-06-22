@@ -2,13 +2,17 @@ package r19033.foi.hr.infoapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import r19033.foi.hr.infoapp.callbacks.LoginRequestCallback;
@@ -24,10 +28,11 @@ public class LoginActivity extends AppCompatActivity {
   private EditText etUsername;
   private EditText etPassword;
   private Button btnLogin;
+  private CheckBox cbRememberMe;
 
   private LoginRequestCallback callback;
-  public String username = "";
-  public String password = "";
+  protected String mUsername = "";
+  protected String mPassword = "";
 
   private LoadProgress progress;
 
@@ -52,14 +57,17 @@ public class LoginActivity extends AppCompatActivity {
 
     etUsername = findViewById(R.id.etUsername);
     etPassword = findViewById(R.id.etPassword);
+    cbRememberMe = findViewById(R.id.cbRememberMe);
+
+    readPrefs();
     btnLogin = findViewById(R.id.btnLogin);
     btnLogin.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        username = etUsername.getText().toString();
-        password = etPassword.getText().toString();
+        mUsername = etUsername.getText().toString();
+        mPassword = etPassword.getText().toString();
 
-        if (username.trim().length() > 0 && password.trim().length() > 0) {
+        if (mUsername.trim().length() > 0 && mPassword.trim().length() > 0) {
 
           new GetDataAsync().execute(callback);
           progress.showDialog();
@@ -83,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
       }
       case Constants.PRIJAVA_USPJESNA: {
         Toast.makeText(LoginActivity.this, "Prijava uspjesna", Toast.LENGTH_SHORT).show();
+        savePrefs();
         mHandler.postDelayed(startActivityDelayed, 2000);
         break;
       }
@@ -101,9 +110,50 @@ public class LoginActivity extends AppCompatActivity {
   };
 
   private void LoginSuccessful() {
-    //TODO start another acitvity
-    //Intent menuActivity = new Intent(LoginActivity.this, MenuActivity.class);
-    //startActivity(menuActivity);
+    Intent menuActivity = new Intent(LoginActivity.this, MenuActivity.class);
+    startActivity(menuActivity);
+  }
+
+  private void readPrefs() {
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+    if (prefs.contains(Constants.PREFS_USERNAME)) {
+      mUsername = prefs.getString(Constants.PREFS_USERNAME, "");
+      etUsername.setText(mUsername, TextView.BufferType.EDITABLE);
+    }
+
+    if (prefs.contains(Constants.PREFS_PASSWORD)) {
+      mPassword = prefs.getString(Constants.PREFS_PASSWORD, "");
+      etPassword.setText(mPassword);
+    }
+
+    if (prefs.contains(Constants.PREFS_CB)) {
+      String checked = prefs.getString(Constants.PREFS_CB, "");
+      if (checked.equals("checked")) {
+        cbRememberMe.setChecked(true);
+      }
+      else {
+        cbRememberMe.setChecked(false);
+      }
+    }
+  }
+
+  private void savePrefs() {
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+    SharedPreferences.Editor editor = prefs.edit();
+
+    if (cbRememberMe.isChecked()) {
+      editor.putString(Constants.PREFS_USERNAME, mUsername);
+      editor.putString(Constants.PREFS_PASSWORD, mPassword);
+      editor.putString(Constants.PREFS_CB, "checked");
+      editor.apply();
+    }
+    else {
+      editor.putString(Constants.PREFS_USERNAME, "");
+      editor.putString(Constants.PREFS_PASSWORD, "");
+      editor.putString(Constants.PREFS_CB, "unchecked");
+      editor.commit();
+    }
   }
 
 
@@ -116,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected Integer doInBackground(LoginRequestCallback... loginRequestCallbacks) {
       callback = loginRequestCallbacks[0];
-      return MSSQL.getInstance().upit_zatraziPrijavu(username, password);
+      return MSSQL.getInstance().upit_zatraziPrijavu(mUsername, mPassword);
     }
 
     @Override

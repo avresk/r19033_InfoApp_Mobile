@@ -1,8 +1,10 @@
 package r19033.foi.hr.infoapp;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +27,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
   private TextView tvNacinPlacanja;
   private TextView tvNapomena;
   private TextView tvDatumKreiranja;
+  private TextView tvKat;
+  private TextView tvKrilo;
 
   private Button btnZavrsi;
   private FinishOrderCallback callback;
@@ -46,6 +50,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
       if (intent.hasExtra("korisnikIme"))narudzba.setKorisnikIme(intent.getStringExtra("korisnikIme"));
       if (intent.hasExtra("korisnikPrezime"))narudzba.setKorisnikPrezime(intent.getStringExtra("korisnikPrezime"));
       if (intent.hasExtra("lokacija"))narudzba.setLokacija(intent.getStringExtra("lokacija"));
+      if (intent.hasExtra("kat"))narudzba.setKat(intent.getStringExtra("kat"));
+      if (intent.hasExtra("krilo"))narudzba.setKat(intent.getStringExtra("krilo"));
       if (intent.hasExtra("ukupno"))narudzba.setUkupno(Float.parseFloat(intent.getStringExtra("ukupno")));
       if (intent.hasExtra("nacinPlacanja"))narudzba.setNacin_placanja(intent.getStringExtra("nacinPlacanja"));
       if (intent.hasExtra("napomena"))narudzba.setNapomena(intent.getStringExtra("napomena"));
@@ -68,6 +74,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
     tvIme = findViewById(R.id.tvOD_korisnikIme);
     tvPrezime = findViewById(R.id.tvOD_korisnikPrezime);
     tvLokacija = findViewById(R.id.tvOD_lokacija);
+    tvKrilo = findViewById(R.id.tvOD_krilo);
+    tvKat = findViewById(R.id.tvOD_kat);
     tvUkupno = findViewById(R.id.tvOD_ukupno);
     tvNacinPlacanja = findViewById(R.id.tvOD_nacinPlacanja);
     tvNapomena = findViewById(R.id.tvOD_napomena);
@@ -76,8 +84,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     btnZavrsi.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        progress.showDialog();
-        new GetDataAsync().execute(callback);
+        zavrsiDialog();
       }
     });
 
@@ -103,7 +110,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
     tvID.setText("ID narudzbe : " + narudzba.getId().toString());
     tvIme.setText("Ime korisnika : " + narudzba.getKorisnikIme());
     tvPrezime.setText("Prezime korisnika : " + narudzba.getKorisnikPrezime());
-    tvLokacija.setText("Lokacija korisnika : " + narudzba.getLokacija());
+    tvLokacija.setText("Kabinet korisnika : " + narudzba.getLokacija());
+    tvKat.setText("Kat zgrade: " + narudzba.getKat());
+    tvKrilo.setText("Krilo zgrade: " + narudzba.getKrilo());
     tvUkupno.setText("Za platiti : " + String.valueOf(narudzba.getUkupno()));
     tvNacinPlacanja.setText("Nacin plačanja : " + narudzba.getNacin_placanja());
     tvNapomena.setText("Napomena : \n" + narudzba.getNapomena());
@@ -115,7 +124,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
   }
 
   @SuppressLint("StaticFieldLeak")
-  class GetDataAsync extends AsyncTask<FinishOrderCallback, Void, Boolean> {
+  class FinishOrderAsync extends AsyncTask<FinishOrderCallback, Void, Boolean> {
 
     FinishOrderCallback callback;
 
@@ -129,6 +138,31 @@ public class OrderDetailsActivity extends AppCompatActivity {
     protected void onPostExecute(Boolean finished) {
       callback.isFinished(finished);
     }
+  }
+
+
+  private void zavrsiDialog() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Zavrsi");
+    builder.setMessage("Da li ste sigurni da želite završiti ovu narudžbu?");
+    builder.setPositiveButton("Da", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        progress.showDialog();
+        new FinishOrderAsync().execute(callback);
+
+      }
+    });
+
+    builder.setNegativeButton("Ne", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+
+      }
+    });
+
+    AlertDialog alert = builder.create();
+    alert.show();
   }
 
 

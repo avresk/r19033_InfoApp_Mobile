@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-
 import r19033.foi.hr.infoapp.R;
 import r19033.foi.hr.infoapp.models.Narudzba;
+import r19033.foi.hr.infoapp.utils.SortLocation;
 
 public class NarudzbaAdapter extends ArrayAdapter<Narudzba> {
 
@@ -96,7 +95,9 @@ public class NarudzbaAdapter extends ArrayAdapter<Narudzba> {
 
             holder.displayID.setText(narudzba.getId().toString());
             holder.displayName.setText(narudzba.getKorisnikIme() + " " + narudzba.getKorisnikPrezime());
-            holder.displayLocation.setText(narudzba.getLokacija());
+            String[] loc;
+            loc = SortLocation.getInstance().returnLocation(narudzba.getLokacija());
+            holder.displayLocation.setText(narudzba.getLokacija() + "; " + loc[1] + "; " + loc[0]);
             holder.displayDate.setText(narudzba.getDatum_kreiranja());
             holder.displayComment.setText(narudzba.getNapomena());
             holder.displayPaymentType.setText(narudzba.getNacin_placanja());

@@ -6,6 +6,8 @@ public class Narudzba {
     private String korisnikIme;
     private String korisnikPrezime;
     private String lokacija;
+    private String krilo;
+    private String kat;
     private boolean izvrsena;
     private float ukupno;
     private String nacin_placanja;
@@ -20,7 +22,6 @@ public class Narudzba {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getLokacija() {
         return lokacija;
@@ -92,5 +93,21 @@ public class Narudzba {
 
     public void setKorisnikPrezime(String korisnikPrezime) {
         this.korisnikPrezime = korisnikPrezime;
+    }
+
+    public String getKrilo() {
+        return krilo;
+    }
+
+    public void setKrilo(String krilo) {
+        this.krilo = krilo;
+    }
+
+    public String getKat() {
+        return kat;
+    }
+
+    public void setKat(String kat) {
+        this.kat = kat;
     }
 }

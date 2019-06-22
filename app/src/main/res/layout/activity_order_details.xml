@@ -23,7 +23,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 android:id="@+id/tvOD_ID"
                 />
 
@@ -33,7 +33,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 android:id="@+id/tvOD_korisnikIme"
                 />
 
@@ -43,7 +43,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 android:id="@+id/tvOD_korisnikPrezime"
                 />
 
@@ -53,7 +53,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 android:id="@+id/tvOD_lokacija"
                 />
 
@@ -63,7 +63,27 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
+                android:id="@+id/tvOD_kat"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+
+                android:id="@+id/tvOD_krilo"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+
                 android:id="@+id/tvOD_nacinPlacanja"
                 />
 
@@ -73,7 +93,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 android:id="@+id/tvOD_datumKreiranja"
                 />
 
@@ -83,7 +103,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 />
             <TextView
                 android:layout_width="match_parent"
@@ -91,7 +111,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 android:id="@+id/tvOD_napomena"
                 android:inputType="textMultiLine"
                 />
@@ -101,7 +121,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 />
 
             <TextView
@@ -110,7 +130,7 @@
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
-                android:textAlignment="center"
+
                 android:id="@+id/tvOD_ukupno"
                 />
 

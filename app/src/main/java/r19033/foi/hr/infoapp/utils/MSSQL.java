@@ -42,8 +42,6 @@ public class MSSQL {
 
   private void getConnection() throws Exception {
     if (conn == null || conn.isClosed()) {
-            /*StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);*/
 
       Class.forName(DRIVER_JTDS).newInstance();
       Log.d("SQL", "Connect to: " + CONNECTION_STRING);
@@ -89,6 +87,9 @@ public class MSSQL {
           item.setKorisnikIme(rs.getString("imeKorisnika"));
           item.setKorisnikPrezime(rs.getString("prezimeKorisnika"));
           item.setLokacija(rs.getString("lokacija"));
+          String[] loc = SortLocation.getInstance().returnLocation(item.getLokacija());
+          item.setKat(loc[0]);
+          item.setKrilo(loc[1]);
           item.setDatum_kreiranja(rs.getString("datumKreiranja"));
           item.setNacin_placanja(rs.getString("nacinPlacanja"));
           item.setNapomena(rs.getString("napomena"));
@@ -104,7 +105,7 @@ public class MSSQL {
 
         }
         stmt.close();
-        conn.close();
+        //conn.close();
         return lista;
       }
 
@@ -168,7 +169,7 @@ public class MSSQL {
 
         }
         stmt.close();
-        conn.close();
+        //conn.close();
         return lista;
       }
 
@@ -212,7 +213,7 @@ public class MSSQL {
 
           stmt.close();
           if (!conn.isClosed()) {
-            conn.close();
+            //conn.close();
           }
 
 
@@ -251,7 +252,7 @@ public class MSSQL {
       e.printStackTrace();
     }
 
-    String query = "UPDATE dbo.narudzba SET dbo.narudzba.zavrsena=1 WHERE dbo.narudzba.narudzba_id=" + id + ";";
+    String query = "UPDATE dbo.narudzba SET dbo.narudzba.zavrsena=1,dbo.narudzba.datum_zavrsetka=getdate() WHERE dbo.narudzba.narudzba_id=" + id + ";";
 
     try {
       if (!conn.isClosed() && conn != null) {
