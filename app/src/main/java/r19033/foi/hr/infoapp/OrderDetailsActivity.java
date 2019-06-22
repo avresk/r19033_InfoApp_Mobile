@@ -51,7 +51,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
       if (intent.hasExtra("korisnikPrezime"))narudzba.setKorisnikPrezime(intent.getStringExtra("korisnikPrezime"));
       if (intent.hasExtra("lokacija"))narudzba.setLokacija(intent.getStringExtra("lokacija"));
       if (intent.hasExtra("kat"))narudzba.setKat(intent.getStringExtra("kat"));
-      if (intent.hasExtra("krilo"))narudzba.setKat(intent.getStringExtra("krilo"));
+      if (intent.hasExtra("krilo"))narudzba.setKrilo(intent.getStringExtra("krilo"));
       if (intent.hasExtra("ukupno"))narudzba.setUkupno(Float.parseFloat(intent.getStringExtra("ukupno")));
       if (intent.hasExtra("nacinPlacanja"))narudzba.setNacin_placanja(intent.getStringExtra("nacinPlacanja"));
       if (intent.hasExtra("napomena"))narudzba.setNapomena(intent.getStringExtra("napomena"));
