@@ -384,7 +384,7 @@ public class MenuActivity extends AppCompatActivity {
     if (mSortedOrdersList.size() > 0) {
       adbOrderedNarudzba.notifyDataSetChanged();
     } else {
-      Toast.makeText(MenuActivity.this, "Lista je prazna!", Toast.LENGTH_SHORT).show();
+      Toast.makeText(MenuActivity.this, "Sortirana lista je prazna!", Toast.LENGTH_SHORT).show();
     }
   }
 

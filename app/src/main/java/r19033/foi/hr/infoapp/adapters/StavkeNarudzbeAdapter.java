@@ -66,7 +66,7 @@ public class StavkeNarudzbeAdapter extends ArrayAdapter<StavkaNarudzbe> {
     final ViewHolder holder;
     try {
       if (convertView == null) {
-        vi = inflater.inflate(R.layout.narudzba_view_model, null);
+        vi = inflater.inflate(R.layout.stavka_narudzbe_view_model, null);
         holder = new ViewHolder();
 
         holder.displayName = (TextView) vi.findViewById(R.id.tvStavkaNaziv);

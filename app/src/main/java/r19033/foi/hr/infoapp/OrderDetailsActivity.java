@@ -125,6 +125,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
       public void updateNarudzba(Narudzba result) {
         progress.dissmissDialog();
         if (result != null) {
+
           narudzba = result;
           listaStavki.clear();
           listaStavki.addAll(narudzba.getStavkeNarudzbe());
@@ -133,7 +134,14 @@ public class OrderDetailsActivity extends AppCompatActivity {
           if (listaStavki != null || listaStavki.size() == 0) {
             adbStavkeNarudzbe.notifyDataSetChanged();
           }
-          loadData(result);
+          try {
+            loadData(result);
+          } catch (Exception e) {
+            //TODO provjeriti
+            Toast.makeText(OrderDetailsActivity.this, "Narudzba je nevažeća jer je prazna (bez stavki)!", Toast.LENGTH_LONG).show();
+            btnZavrsi.setEnabled(false);
+            e.printStackTrace();
+          }
         } else {
           Toast.makeText(OrderDetailsActivity.this, "Stavke narudzbe ne postoje", Toast.LENGTH_SHORT).show();
           setResult(123);
