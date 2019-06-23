@@ -116,6 +116,7 @@ public class MenuActivity extends AppCompatActivity {
       if (resultCode == 123) {
         progress.showDialog();
         new GetAllOrders().execute(callback);
+
       }
     }
   }
@@ -279,6 +280,7 @@ public class MenuActivity extends AppCompatActivity {
           Toast.makeText(MenuActivity.this, "Lista narudzbi je prazna!", Toast.LENGTH_SHORT).show();
         }
 
+        showOrderByStatus(cbUnfinishedOrders.isChecked());
       }
     };
   }
@@ -384,7 +386,9 @@ public class MenuActivity extends AppCompatActivity {
     if (mSortedOrdersList.size() > 0) {
       adbOrderedNarudzba.notifyDataSetChanged();
     } else {
-      Toast.makeText(MenuActivity.this, "Sortirana lista je prazna!", Toast.LENGTH_SHORT).show();
+      if (llSortedOrder.getVisibility() == View.VISIBLE) {
+        Toast.makeText(MenuActivity.this, "Sortirana lista je prazna!", Toast.LENGTH_SHORT).show();
+      }
     }
   }
 

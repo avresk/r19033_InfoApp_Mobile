@@ -195,7 +195,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
   private void zavrsiDialog() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Zavrsi");
+    builder.setTitle("Završi");
     builder.setMessage("Da li ste sigurni da želite završiti ovu narudžbu?");
     builder.setPositiveButton("Da", new DialogInterface.OnClickListener() {
       @Override
