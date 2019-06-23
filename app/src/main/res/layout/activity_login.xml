@@ -13,18 +13,27 @@
             android:orientation="vertical"
             xmlns:android="http://schemas.android.com/apk/res/android">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="9dp"
-                android:background="@android:color/holo_red_dark" />
+
 
             <ImageView
                 android:layout_width="161dp"
                 android:layout_height="65dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="60dp"
                 android:src="@drawable/foi" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="4dp"
+                android:textSize="3dp"
+                android:background="@android:color/darker_gray"
+
+                />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -48,6 +57,16 @@
                 />
             <TextView
                 android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="4dp"
+                android:textSize="3dp"
+                android:background="@android:color/darker_gray"
+
+                />
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Password"
                 android:layout_marginLeft="20dp"
@@ -65,7 +84,16 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="15dp"
                 android:textColor="@android:color/black" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="4dp"
+                android:textSize="3dp"
+                android:background="@android:color/darker_gray"
 
+                />
             <CheckBox
                 android:id="@+id/cbRememberMe"
                 android:layout_width="wrap_content"

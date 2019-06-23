@@ -18,14 +18,13 @@
         >
 
         <CheckBox
+            android:id="@+id/cbUnfinishedOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prikaži samo neizvršene narudžbe"
-            android:id="@+id/cbUnfinishedOrders"
             android:background="@android:color/holo_red_dark"
-            android:textColor="@android:color/white"
-            android:outlineSpotShadowColor="@android:color/white"
-            />
+            android:buttonTint="@android:color/white"
+            android:text="Prikaži samo neizvršene narudžbe"
+            android:textColor="@android:color/white" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -78,13 +77,15 @@
         >
 
         <CheckBox
-            android:layout_width="wrap_content"
+            android:layout_width="380dp"
             android:layout_height="wrap_content"
-            android:text="Prikazi samo neizvrsene narudžbe"
+            android:text="Prikaži samo neizvršene narudžbe"
             android:id="@+id/cbSortedUnfinishedOrders"
             android:background="@android:color/holo_red_dark"
             android:textColor="@android:color/white"
+            android:buttonTint="@android:color/white"
             android:outlineSpotShadowColor="@android:color/white"
+            android:backgroundTint="@android:color/holo_red_dark"
             />
 
         <LinearLayout
