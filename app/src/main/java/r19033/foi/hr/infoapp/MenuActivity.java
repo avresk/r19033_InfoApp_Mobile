@@ -51,8 +51,8 @@ public class MenuActivity extends AppCompatActivity {
 
   private ListUpdateCallback callback;
 
-  private Spinner spSortBy;
-  private Spinner spSortResult;
+  private Spinner spKrilo;
+  private Spinner spKat;
 
   private ArrayList<Narudzba> mOrderList = new ArrayList<>();
   private ArrayList<Narudzba> mUnfinishedOrderList = new ArrayList<>();
@@ -62,8 +62,9 @@ public class MenuActivity extends AppCompatActivity {
   private NarudzbaAdapter adbNarudzba;
   private NarudzbaAdapter adbOrderedNarudzba;
 
-  private int searchType = Constants.TRAZI_PO_KRILU;
-  private String searchValue = "JUG";
+  //private int searchType = Constants.TRAZI_PO_KRILU;
+  private String searchValueKrilo = "JUG";
+  private String searchValueKat = "1";
 
   private final String[] string_sortBy = {"Lokacija: kat", "Lokacija: krilo"};
   private final String[] string_kat = {"KAT 1", "KAT 2", "KAT 3"};
@@ -163,8 +164,8 @@ public class MenuActivity extends AppCompatActivity {
     mSortedOrdersListView.setAdapter(adbOrderedNarudzba);
 
     // spinner
-    spSortBy = findViewById(R.id.spinnerSortBy);
-    spSortResult = findViewById(R.id.spinnerSortResult);
+    spKrilo = findViewById(R.id.spinnerKrilo);
+    spKat = findViewById(R.id.spinnerKat);
 
     spinnerAdapterResultKat = new ArrayAdapter<String>
             (this, R.layout.custom_spinner_item, string_kat);
@@ -176,19 +177,19 @@ public class MenuActivity extends AppCompatActivity {
             (this, R.layout.custom_spinner_item, string_krilo);
 
     spinnerAdapterSort.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    spSortBy.setAdapter(spinnerAdapterSort);
+    spKrilo.setAdapter(spinnerAdapterResultKrilo);
 
     spinnerAdapterResultKat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    spSortResult.setAdapter(spinnerAdapterResultKat);
+    spKat.setAdapter(spinnerAdapterResultKat);
 
     spinnerAdapterResultKat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-    spSortBy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    spKrilo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String selectedItem = spSortBy.getSelectedItem().toString();
-        setSpinnerBySelectedItem(selectedItem);
+        String selectedItem = spKrilo.getSelectedItem().toString();
+        setKrilo(selectedItem);
       }
 
       @Override
@@ -197,11 +198,11 @@ public class MenuActivity extends AppCompatActivity {
       }
     });
 
-    spSortResult.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    spKat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String selectedItem = spSortResult.getSelectedItem().toString();
-        setSearchType(selectedItem);
+        String selectedItem = spKat.getSelectedItem().toString();
+        setKat(selectedItem);
       }
 
       @Override
@@ -282,7 +283,9 @@ public class MenuActivity extends AppCompatActivity {
     };
   }
 
-  private void setSpinnerBySelectedItem(String selectedItem) {
+  private void setKrilo(String selectedItem) {
+    searchValueKrilo = selectedItem;
+    /*
     if (selectedItem.contains("kat")) {
       spSortResult.setAdapter(spinnerAdapterResultKat);
       searchType = Constants.TRAZI_PO_KATU;
@@ -290,6 +293,7 @@ public class MenuActivity extends AppCompatActivity {
       spSortResult.setAdapter(spinnerAdapterResultKrilo);
       searchType = Constants.TRAZI_PO_KRILU;
     }
+    */
   }
 
 
@@ -314,7 +318,17 @@ public class MenuActivity extends AppCompatActivity {
   }
 
 
-  private void setSearchType(String selectedItem) {
+  private void setKat(String selectedItem) {
+
+    if (selectedItem.contains("1")) {
+      searchValueKat = "1";
+    } else if (selectedItem.contains("2")) {
+      searchValueKat = "2";
+    } else if (selectedItem.contains("3")) {
+      searchValueKat = "3";
+    }
+
+    /*
     if (searchType == Constants.TRAZI_PO_KRILU) {
       searchValue = selectedItem;
     } else if (searchType == Constants.TRAZI_PO_KATU) {
@@ -326,17 +340,20 @@ public class MenuActivity extends AppCompatActivity {
         searchValue = "3";
       }
     }
+    */
   }
 
   private void applyLocalSearch() {
 
     mSortedOrdersList.clear();
     adbOrderedNarudzba.notifyDataSetChanged();
+    Log.d("LocalSearch", "search value krilo: " + searchValueKrilo + "; search value kat: " + searchValueKat);
     for (Narudzba item : mOrderList) {
-      if (searchType == Constants.TRAZI_PO_KATU) {
+      //if (searchType == Constants.TRAZI_PO_KATU) {
+        Log.d("LocalSearch", "Item: " + String.valueOf(item.getId()) + "; Krilo: " + item.getKrilo() + "; Kat: " + item.getKat());
 
-        if (item.getKat() != null) {
-          if (item.getKat().equals(searchValue)) {
+        if (item.getKat() != null && item.getKrilo() != null) {
+          if (item.getKat().equals(searchValueKat) && item.getKrilo().equals(searchValueKrilo)) {
             if (showOnlyUnfinishedSearchOrders) {
               if (!item.isIzvrsena()) {
                 mSortedOrdersList.add(item);
@@ -347,8 +364,8 @@ public class MenuActivity extends AppCompatActivity {
 
           }
         }
-      }
-      else if (searchType == Constants.TRAZI_PO_KRILU) {
+      //}
+      /*else if (searchType == Constants.TRAZI_PO_KRILU) {
 
         if (item.getKrilo() != null) {
           if (item.getKrilo().equals(searchValue)) {
@@ -362,7 +379,7 @@ public class MenuActivity extends AppCompatActivity {
             }
           }
         }
-      }
+      }*/
     }
     if (mSortedOrdersList.size() > 0) {
       adbOrderedNarudzba.notifyDataSetChanged();
@@ -375,6 +392,7 @@ public class MenuActivity extends AppCompatActivity {
 
     Intent orderDetails = new Intent(MenuActivity.this, OrderDetailsActivity.class);
     orderDetails.putExtra("idNarudzbe", narudzba.getId().toString());
+    /*
     orderDetails.putExtra("korisnikIme", narudzba.getKorisnikIme());
     orderDetails.putExtra("korisnikPrezime", narudzba.getKorisnikPrezime());
     orderDetails.putExtra("lokacija", narudzba.getLokacija());
@@ -384,6 +402,7 @@ public class MenuActivity extends AppCompatActivity {
     orderDetails.putExtra("nacinPlacanja", narudzba.getNacin_placanja());
     orderDetails.putExtra("napomena", narudzba.getNapomena());
     orderDetails.putExtra("datumKreiranja", narudzba.getDatum_kreiranja());
+    */
     if (narudzba.isIzvrsena()) {
       orderDetails.putExtra("izvrsena", "Narudžba je izvršena!");
     } else {

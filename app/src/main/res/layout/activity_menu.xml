@@ -102,7 +102,7 @@
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerSortBy"
+                android:id="@+id/spinnerKrilo"
                 android:textAlignment="center"
 
                 >
@@ -112,7 +112,7 @@
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerSortResult"
+                android:id="@+id/spinnerKat"
                 android:textAlignment="center"
                 >
             </Spinner>

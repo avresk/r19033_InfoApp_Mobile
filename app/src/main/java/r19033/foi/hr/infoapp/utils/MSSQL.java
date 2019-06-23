@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import r19033.foi.hr.infoapp.models.Narudzba;
+import r19033.foi.hr.infoapp.models.StavkaNarudzbe;
 
 public class MSSQL {
 
@@ -49,6 +50,91 @@ public class MSSQL {
     }
   }
 
+  public Narudzba upit_pregledSvihStavkiNaruzbe(long id) {
+    ArrayList<Narudzba> lista = new ArrayList<Narudzba>();
+
+    ArrayList<StavkaNarudzbe> stavkeNarudzbe = new ArrayList<>();
+    boolean initialLoadDone = false;
+    try {
+      getConnection();
+
+      if (conn != null) {
+        if (!conn.isClosed()) {
+          conn.setAutoCommit(false);
+          stmt = conn.createStatement();
+        }
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    String query = "select dbo.narudzba.narudzba_id as narudzba, " +
+            "stavka_narudzbe.kolicina as kolicina, " +
+            "dbo.korisnik.ime as imeKorisnika, " +
+            "dbo.korisnik.prezime as prezimeKorisnika, " +
+            "dbo.narudzba.datum_kreiranja as datumKreiranja, " +
+            "dbo.narudzba.nacin_placanja as nacinPlacanja, " +
+            "dbo.narudzba.napomena as napomena, " +
+            "dbo.narudzba.ukupno as ukupno, " +
+            "artikl.naziv as nazivArtikla, " +
+            "stavka_narudzbe.kolicina as kolicina, " +
+            "zavrsena, lokacija from stavka_narudzbe inner join " +
+            "dbo.narudzba on narudzba.narudzba_id=stavka_narudzbe.narudzba " +
+            "LEFT OUTER JOIN dbo.korisnik on narudzba.korisnik_id=dbo.korisnik.korisnik_id " +
+            "INNER JOIN artikl on stavka_narudzbe.artikl_id=artikl.artikl_id where " +
+            "narudzba_id =" + id + ";";
+    Narudzba item = new Narudzba();
+    try {
+      if (!conn.isClosed() && conn != null) {
+        ResultSet rs;
+
+        rs = stmt.executeQuery(query);
+        while (rs.next()) {
+
+          if (!initialLoadDone) {
+            item.setId((long) rs.getInt("narudzba"));
+            item.setKorisnikIme(rs.getString("imeKorisnika"));
+            item.setKorisnikPrezime(rs.getString("prezimeKorisnika"));
+            item.setLokacija(rs.getString("lokacija"));
+            String[] loc = SortLocation.getInstance().returnLocation(item.getLokacija());
+            item.setKat(loc[0]);
+            item.setKrilo(loc[1]);
+            Log.d("SQLtest", rs.getString("nazivArtikla"));
+            item.setUkupno(rs.getFloat("ukupno"));
+            item.setDatum_kreiranja(rs.getString("datumKreiranja"));
+            item.setNacin_placanja(rs.getString("nacinPlacanja"));
+            item.setNapomena(rs.getString("napomena"));
+            int zavrsena = rs.getInt("zavrsena");
+            if (zavrsena == 0) {
+              item.setIzvrsena(false);
+            } else {
+              item.setIzvrsena(true);
+            }
+          }
+          StavkaNarudzbe stavka = new StavkaNarudzbe();
+          stavka.setNaziv(rs.getString("nazivArtikla"));
+          stavka.setKolicina(rs.getFloat("kolicina"));
+          stavkeNarudzbe.add(stavka);
+          //Log.d("SQL", item.getId() + ";" + item.getKorisnikIme() + ";" + item.getLokacija());
+
+
+
+        }
+        item.setStavkeNarudzbe(stavkeNarudzbe);
+        lista.add(item);
+        Log.d("SQLtest", "Items size: " + String.valueOf(lista.size()) + "; Stavke size: " + String.valueOf(stavkeNarudzbe.size()));
+        stmt.close();
+        //conn.close();
+        return item;
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
 
   public ArrayList<Narudzba> upit_pregledSvihNarudzbi() {
 

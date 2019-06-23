@@ -1,5 +1,7 @@
 package r19033.foi.hr.infoapp.models;
 
+import java.util.ArrayList;
+
 public class Narudzba {
 
     private Long id;
@@ -14,6 +16,7 @@ public class Narudzba {
     private String napomena;
     private String datum_kreiranja;
     private String datum_zavrsetka;
+    private ArrayList<StavkaNarudzbe> stavkeNarudzbe;
 
     public Long getId() {
         return id;
@@ -109,5 +112,13 @@ public class Narudzba {
 
     public void setKat(String kat) {
         this.kat = kat;
+    }
+
+    public ArrayList<StavkaNarudzbe> getStavkeNarudzbe() {
+        return stavkeNarudzbe;
+    }
+
+    public void setStavkeNarudzbe(ArrayList<StavkaNarudzbe> stavkeNarudzbe) {
+        this.stavkeNarudzbe = stavkeNarudzbe;
     }
 }

@@ -7,13 +7,21 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import r19033.foi.hr.infoapp.adapters.StavkeNarudzbeAdapter;
 import r19033.foi.hr.infoapp.callbacks.FinishOrderCallback;
+import r19033.foi.hr.infoapp.callbacks.ListUpdateCallback;
+import r19033.foi.hr.infoapp.callbacks.NarudzbaCallback;
 import r19033.foi.hr.infoapp.models.Narudzba;
+import r19033.foi.hr.infoapp.models.StavkaNarudzbe;
 import r19033.foi.hr.infoapp.utils.LoadProgress;
 import r19033.foi.hr.infoapp.utils.MSSQL;
 
@@ -30,12 +38,19 @@ public class OrderDetailsActivity extends AppCompatActivity {
   private TextView tvKat;
   private TextView tvKrilo;
 
+  private ListView lvStavkeNarudzbe;
+  private StavkeNarudzbeAdapter adbStavkeNarudzbe;
+  private ArrayList<StavkaNarudzbe> listaStavki = new ArrayList<>();
+
   private Button btnZavrsi;
   private FinishOrderCallback callback;
 
   private LoadProgress progress;
 
   Narudzba narudzba = new Narudzba();
+  private NarudzbaCallback listCallback;
+  protected long narudzbaID = 0;
+  protected boolean narudzbaIzvrsena = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +61,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
     Intent intent = getIntent();
     if (intent != null) {
 
-      if (intent.hasExtra("idNarudzbe"))narudzba.setId(Long.parseLong(intent.getStringExtra("idNarudzbe")));
+      if (intent.hasExtra("idNarudzbe"))narudzbaID = Long.parseLong(intent.getStringExtra("idNarudzbe"));
+      /*
       if (intent.hasExtra("korisnikIme"))narudzba.setKorisnikIme(intent.getStringExtra("korisnikIme"));
       if (intent.hasExtra("korisnikPrezime"))narudzba.setKorisnikPrezime(intent.getStringExtra("korisnikPrezime"));
       if (intent.hasExtra("lokacija"))narudzba.setLokacija(intent.getStringExtra("lokacija"));
@@ -56,16 +72,18 @@ public class OrderDetailsActivity extends AppCompatActivity {
       if (intent.hasExtra("nacinPlacanja"))narudzba.setNacin_placanja(intent.getStringExtra("nacinPlacanja"));
       if (intent.hasExtra("napomena"))narudzba.setNapomena(intent.getStringExtra("napomena"));
       if (intent.hasExtra("datumKreiranja"))narudzba.setDatum_kreiranja(intent.getStringExtra("datumKreiranja"));
+      */
       if (intent.hasExtra("izvrsena")){
         if (intent.getStringExtra("izvrsena").equals("Narudžba je izvršena!")) {
-          narudzba.setIzvrsena(true);
+          narudzbaIzvrsena = true;
         } else {
-          narudzba.setIzvrsena(false);
+          narudzbaIzvrsena = false;
         }
       }
     }
 
-    loadData();
+    new GetNarudzba().execute(listCallback);
+    progress.showDialog();
   }
 
 
@@ -102,11 +120,37 @@ public class OrderDetailsActivity extends AppCompatActivity {
       }
     };
 
+    listCallback = new NarudzbaCallback() {
+      @Override
+      public void updateNarudzba(Narudzba result) {
+        progress.dissmissDialog();
+        if (result != null) {
+          narudzba = result;
+          listaStavki.clear();
+          listaStavki.addAll(narudzba.getStavkeNarudzbe());
+          Log.d("_stavke", "Lista stavki size: " + String.valueOf(listaStavki.size()) + "; " + String.valueOf(narudzba.getStavkeNarudzbe().size()));
+
+          if (listaStavki != null || listaStavki.size() == 0) {
+            adbStavkeNarudzbe.notifyDataSetChanged();
+          }
+          loadData(result);
+        } else {
+          Toast.makeText(OrderDetailsActivity.this, "Stavke narudzbe ne postoje", Toast.LENGTH_SHORT).show();
+          setResult(123);
+          finish();
+        }
+      }
+    };
+
+    lvStavkeNarudzbe = findViewById(R.id.lvStavkeNarudzbe);
+    adbStavkeNarudzbe = new StavkeNarudzbeAdapter(OrderDetailsActivity.this, listaStavki);
+    lvStavkeNarudzbe.setAdapter(adbStavkeNarudzbe);
+
     progress = new LoadProgress(OrderDetailsActivity.this);
   }
 
   @SuppressLint("SetTextI18n")
-  private void loadData() {
+  private void loadData(Narudzba narudzba) {
     tvID.setText("ID narudzbe : " + narudzba.getId().toString());
     tvIme.setText("Ime korisnika : " + narudzba.getKorisnikIme());
     tvPrezime.setText("Prezime korisnika : " + narudzba.getKorisnikPrezime());
@@ -163,6 +207,25 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     AlertDialog alert = builder.create();
     alert.show();
+  }
+
+  @SuppressLint("StaticFieldLeak")
+  class GetNarudzba extends AsyncTask<NarudzbaCallback, Void, Narudzba> {
+
+    NarudzbaCallback callback;
+
+    @Override
+    protected Narudzba doInBackground(NarudzbaCallback... narudzbas) {
+      callback = narudzbas[0];
+      Log.d("_narudzba", String.valueOf(narudzbaID));
+      return MSSQL.getInstance().upit_pregledSvihStavkiNaruzbe(narudzbaID);
+    }
+
+    @Override
+    protected void onPostExecute(Narudzba narudzba) {
+      Log.d("_narudzba", String.valueOf(narudzba.getId()) + "; " + narudzba.getKorisnikIme());
+      callback.updateNarudzba(narudzba);
+    }
   }
 
 
