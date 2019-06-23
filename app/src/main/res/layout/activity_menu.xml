@@ -20,8 +20,11 @@
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prikaži samo neizvrsene narudžbe"
+            android:text="Prikaži samo neizvršene narudžbe"
             android:id="@+id/cbUnfinishedOrders"
+            android:background="@android:color/holo_red_dark"
+            android:textColor="@android:color/white"
+            android:outlineSpotShadowColor="@android:color/white"
             />
 
         <LinearLayout
@@ -30,12 +33,12 @@
             android:orientation="horizontal"
             android:id="@+id/listOrders"
             >
+
             <ListView
+                android:id="@+id/lvOrders"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/lvOrders"
-                android:layout_marginBottom="50dp"
-                >
+                android:layout_marginBottom="50dp">
 
             </ListView>
 
@@ -79,6 +82,9 @@
             android:layout_height="wrap_content"
             android:text="Prikazi samo neizvrsene narudžbe"
             android:id="@+id/cbSortedUnfinishedOrders"
+            android:background="@android:color/holo_red_dark"
+            android:textColor="@android:color/white"
+            android:outlineSpotShadowColor="@android:color/white"
             />
 
         <LinearLayout
@@ -153,11 +159,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
+        android:backgroundTint="@android:color/holo_red_dark"
+        app:itemTextColor="@android:color/white"
+        app:itemBackground="@android:color/holo_red_dark"
         android:background="?android:attr/windowBackground"
+        app:itemIconTint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation"
-        />
+        app:menu="@menu/navigation" />
 
 </android.support.constraint.ConstraintLayout>

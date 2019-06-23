@@ -5,63 +5,88 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             xmlns:android="http://schemas.android.com/apk/res/android">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/info_app_cover"
-                android:layout_marginBottom="50dp"
-                />
-
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="LOGIN FORM:"
-                android:textAlignment="center"
-                android:textSize="25dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="9dp"
+                android:background="@android:color/holo_red_dark" />
+
+            <ImageView
+                android:layout_width="161dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="80dp"
+                android:src="@drawable/foi" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Username"
+                android:layout_marginLeft="20dp"
+                android:textSize="12dp"
+                android:layout_marginBottom="4dp"
+
                 />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="username"
-                android:textAlignment="center"
                 android:id="@+id/etUsername"
-
-                />
-
-            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="password"
-                android:textAlignment="center"
-                android:id="@+id/etPassword"
-                android:inputType="textPassword"
+                android:background="@android:color/white"
+                android:hint="username"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="13dp"
+                android:textColor="@android:color/black"
+
                 />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Password"
+                android:layout_marginLeft="20dp"
+                android:textSize="12dp"
+                android:layout_marginBottom="4dp"
+
+                />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:hint="password"
+                android:inputType="textPassword"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="15dp"
+                android:textColor="@android:color/black" />
 
             <CheckBox
+                android:id="@+id/cbRememberMe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Zapamti me"
-                android:layout_gravity="center"
+                android:layout_gravity="left"
                 android:layout_margin="10dp"
-                android:id="@+id/cbRememberMe"
-
-                />
-
+                android:layout_marginLeft="30dp"
+                android:background="@android:color/white"
+                android:text="Zapamti me" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/btnLogin"
+                android:layout_width="329dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="65dp"
+                android:layout_marginBottom="45dp"
+                android:background="@android:color/holo_red_dark"
                 android:text="login"
+                android:textColor="@android:color/white"
+
                 />
 
         </LinearLayout>

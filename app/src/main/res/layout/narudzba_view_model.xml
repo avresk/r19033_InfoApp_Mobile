@@ -4,31 +4,37 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    android:background="@android:color/darker_gray">
+    android:background="@android:color/white"
+    >
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@android:color/white"
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Narudžba ID: " />
+            android:text="Narudžba ID: "
+            android:textSize="12dp"
+
+            />
 
         <TextView
             android:id="@+id/tvNarudzbaID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="12dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@android:color/white"
 
         >
 
@@ -48,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@android:color/white"
 
         >
 
@@ -67,6 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@android:color/white"
 
         >
 
@@ -86,6 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@android:color/white"
 
         >
 
@@ -105,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
+        android:background="@android:color/white"
         >
 
         <TextView
@@ -126,6 +135,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:layout_marginBottom="10dp"
 
         >
 
@@ -142,12 +153,7 @@
             android:layout_marginLeft="10dp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:layout_marginTop="10dp"
-        />
+
 
 
 </LinearLayout>

@@ -86,17 +86,17 @@ public class LoginActivity extends AppCompatActivity {
         break;
       }
       case Constants.KRIVA_LOZINKA : {
-        Toast.makeText(LoginActivity.this, "Lozinka se ne podudara s korisnickim imenom", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, "Lozinka se ne podudara s korisničkim imenom", Toast.LENGTH_SHORT).show();
         break;
       }
       case Constants.PRIJAVA_USPJESNA: {
-        Toast.makeText(LoginActivity.this, "Prijava uspjesna", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, "Prijava uspješna", Toast.LENGTH_SHORT).show();
         savePrefs();
         mHandler.postDelayed(startActivityDelayed, 2000);
         break;
       }
       default : {
-        Toast.makeText(LoginActivity.this, "Greska baze", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, "Greška baze", Toast.LENGTH_SHORT).show();
         break;
       }
     }

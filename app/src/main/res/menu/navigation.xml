@@ -4,11 +4,14 @@
     <item
         android:id="@+id/navigation_order_list"
         android:icon="@drawable/icon_new_order_24"
+        android:iconTint="@android:color/white"
         android:title="@string/title_orders" />
+
 
     <item
         android:id="@+id/navigation_new_order"
         android:icon="@drawable/icon_orders"
+        android:iconTint="@android:color/white"
         android:title="@string/title_sort_orders" />
 
 

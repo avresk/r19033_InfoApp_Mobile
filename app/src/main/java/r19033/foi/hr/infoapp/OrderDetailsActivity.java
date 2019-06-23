@@ -114,11 +114,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
     tvKat.setText("Kat zgrade: " + narudzba.getKat());
     tvKrilo.setText("Krilo zgrade: " + narudzba.getKrilo());
     tvUkupno.setText("Za platiti : " + String.valueOf(narudzba.getUkupno()));
-    tvNacinPlacanja.setText("Nacin plačanja : " + narudzba.getNacin_placanja());
+    tvNacinPlacanja.setText("Nacin plaćanja : " + narudzba.getNacin_placanja());
     tvNapomena.setText("Napomena : \n" + narudzba.getNapomena());
     tvDatumKreiranja.setText("Kreirano : " + narudzba.getDatum_kreiranja());
     if (narudzba.isIzvrsena()) {
-      Toast.makeText(this, "Narudzba je vec izvšena", Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, "Narudzba je vec izvršena", Toast.LENGTH_SHORT).show();
       btnZavrsi.setEnabled(false);
     }
   }
